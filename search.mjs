@@ -1,5 +1,6 @@
 import IOTA from '@iota/core'
 import converter from '@iota/converter'
+import transactionconverter from '@iota/transaction-converter'
 
 const seed = '9XDJRCJRIDRJKCSBMALHEYOMJDCNQUSDBEMVHGTDAOLJCZSNCBAGBHYJOLRTDXJZKUVKDOUJNYRQVAPDC'
 const adress = 'XDXQFTOXBQCZ9GBMFFWKPPWTCEYQDCWXRJWFHBAUFVFHUYSXIYSOLEIBIILKJXLKOLEOECEGIM9CMYPEX'
@@ -17,15 +18,24 @@ const bums = converter.asciiToTrytes('message')
 //     .then(info => console.log(info))
 //     .catch(err => console.log(err))
 
-iota2.findTransactionObjects
-
-iota2.findTransactions({ bundles: [messagehash] })
-    .then(bundles => {
-        console.log(bundles)
+iota2.getTrytes([messagehash])
+// Parsing as transaction objects
+    .then(trytes => transactionconverter.asTransactionObjects([messagehash])(trytes))
+    .then(transactions => {
+        console.log(transactions)
+        console.log("decode " + converter.trytesToAscii(transactions[0].signatureMessageFragment + "9"))
     })
     .catch(err => {
         console.log(err)
     })
+
+// iota2.findTransactions({ bundles: [messagehash] })
+//     .then(bundles => {
+//         console.log(bundles)
+//     })
+//     .catch(err => {
+//         console.log(err)
+//     })
 
 // Array of transfers which defines transfer recipients and value transferred in IOTAs.
 const transfers = [{
